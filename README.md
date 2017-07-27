@@ -1,6 +1,6 @@
 # Room controller implemented on FreeOSEK and EDU-CIAA board
 
-** Implemented for a restroom **
+Implemented for a restroom
 
 Sensors:
 
