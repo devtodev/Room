@@ -1,5 +1,11 @@
-# Blinky con freeOSEK y sAPI. 
+# Room controller implemented on FreeOSEK and EDU-CIAA board
 
-**El archivo ".oil" debe nombrarse igual que la carpeta del proyecto.**
+** Implemented for a restroom **
 
-**No olvidar el paso "make generate" antes de "make" en los proyectos con OSEK.**
+Sensors:
+
+* Humidity, move, key1, key2
+
+Actions:
+
+* Lights ON/OFF, Fan ON/OFF
