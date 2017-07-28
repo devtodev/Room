@@ -79,15 +79,58 @@
 
 #define OSEK_OS_INTERRUPT_MASK ((InterruptFlagsType)0xFFFFFFFFU)
 
+/** \brief Task Definition */
+#define SensorTask 0
+/** \brief Task Definition */
+#define ActionTask 1
+
+/** \brief Definition of the Application Mode AppMode1 */
+#define AppMode1 0
 
 
 
+/** \brief Definition of the Alarm ActivateSensorTask */
+#define ActivateSensorTask 0
+/** \brief Definition of the Alarm ActivateActionTask */
+#define ActivateActionTask 1
 
+/** \brief Definition of the Counter HardwareCounter */
+#define HardwareCounter 0
 
+/** \brief OS Error Get Service Id */
+/* \req OSEK_ERR_0.1 The macro OSErrorGetServiceId() shall provide the service
+ * identifier with a OSServiceIdType type where the error has been risen
+ * \req OSEK_ERR_0.1.1 Possibly return values are: OSServiceId_xxxx, where
+ * xxxx is the name of the system service
+ */
+#define OSErrorGetServiceId() (Osek_ErrorApi)
+
+#define OSErrorGetParam1() (Osek_ErrorParam1)
+
+#define OSErrorGetParam2() (Osek_ErrorParam2)
+
+#define OSErrorGetParam3() (Osek_ErrorParam3)
+
+#define OSErrorGetRet() (Osek_ErrorRet)
 
 /** \brief OSEK_MEMMAP macro (OSEK_DISABLE not MemMap is used for FreeOSEK, OSEK_ENABLE
  ** MemMap is used for FreeOSEK) */
 #define OSEK_MEMMAP OSEK_DISABLE
+/** \brief Schedule this Task if higher priority Task are Active
+ **
+ ** \remarks if the system is configured with extended errors the
+ **          function Schedule is implemented as a macro and calls the
+ **          internal function Schedule_Int. If Standard errores are
+ **          configured the function Schedule is implemented as a function.
+ **
+ ** This API shall Schedule the calling Task if a higher priority Task
+ ** is active. This API shall only be used from non preemtive tasks.
+ **
+ ** \return E_OK if no error
+ ** \return E_OS_CALLEVEL if call at interrupt level
+ ** \return E_OS_RESOURCE if the calling task occupies resources
+ **/
+#define Schedule() Schedule_Int(TRUE)
 
 /*==================[typedef]================================================*/
 /** \brief Type definition of StatusType
@@ -99,8 +142,49 @@ typedef unsigned char StatusType;
 
 
 /*==================[external data declaration]==============================*/
+/** \brief Error Api Variable
+ **
+ ** This variable contents the api which generate the last error
+ **/
+extern unsigned int Osek_ErrorApi;
+
+/** \brief Error Param1 Variable
+ **
+ ** This variable contents the first parameter passed to the api which has
+ ** generted the last error.
+ **/
+extern unsigned int Osek_ErrorParam1;
+
+/** \brief Error Param2 Variable
+ **
+ ** This variable contents the second parameter passed to the api which has
+ ** generted the last error.
+ **/
+extern unsigned int Osek_ErrorParam2;
+
+/** \brief Error Param3 Variable
+ **
+ ** This variable contents the third parameter passed to the api which has
+ ** generted the last error.
+ **/
+extern unsigned int Osek_ErrorParam3;
+
+/** \brief Error Return Variable
+ **
+ ** This variable contents return value of the api which has generated
+ ** the last error.
+ **/
+extern unsigned int Osek_ErrorRet;
+
 
 /*==================[external functions declaration]=========================*/
+/** \brief Error Hook */
+extern void ErrorHook(void);
+
+/** \brief Task Declaration of Task SensorTask */
+DeclareTask(SensorTask);
+/** \brief Task Declaration of Task ActionTask */
+DeclareTask(ActionTask);
 
 
 
@@ -125,6 +209,7 @@ typedef unsigned char StatusType;
  ** \return E_OS_CALLEVEL if call at interrupt level
  ** \return E_OS_RESOURCE if the calling task occupies resources
  **/
+extern StatusType Schedule_Int(boolean PerformChecks);
 
 /** @} doxygen end group definition */
 /** @} doxygen end group definition */

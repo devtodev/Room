@@ -77,30 +77,30 @@
 /*==================[internal functions declaration]=========================*/
 
 /*==================[internal data definition]===============================*/
-/** \brief PeriodicTask stack */
+/** \brief SensorTask stack */
 #if ( x86 == ARCH )
-uint8 StackTaskPeriodicTask[512 + TASK_STACK_ADDITIONAL_SIZE];
+uint8 StackTaskSensorTask[512 + TASK_STACK_ADDITIONAL_SIZE];
 #else
-uint8 StackTaskPeriodicTask[512];
+uint8 StackTaskSensorTask[512];
 #endif
-/** \brief PeriodicTask2 stack */
+/** \brief ActionTask stack */
 #if ( x86 == ARCH )
-uint8 StackTaskPeriodicTask2[512 + TASK_STACK_ADDITIONAL_SIZE];
+uint8 StackTaskActionTask[512 + TASK_STACK_ADDITIONAL_SIZE];
 #else
-uint8 StackTaskPeriodicTask2[512];
+uint8 StackTaskActionTask[512];
 #endif
 
-/** \brief PeriodicTask context */
-TaskContextType ContextTaskPeriodicTask;
-/** \brief PeriodicTask2 context */
-TaskContextType ContextTaskPeriodicTask2;
+/** \brief SensorTask context */
+TaskContextType ContextTaskSensorTask;
+/** \brief ActionTask context */
+TaskContextType ContextTaskActionTask;
 
 /** \brief Ready List for Priority 0 */
 TaskType ReadyList0[2];
 
 const AlarmType OSEK_ALARMLIST_HardwareCounter[2] = {
-   ActivatePeriodicTask, /* this alarm has to be incremented with this counter */
-   ActivatePeriodicTask2, /* this alarm has to be incremented with this counter */
+   ActivateSensorTask, /* this alarm has to be incremented with this counter */
+   ActivateActionTask, /* this alarm has to be incremented with this counter */
 };
 
 
@@ -115,12 +115,12 @@ const AlarmType OSEK_ALARMLIST_HardwareCounter[2] = {
  */
 
 const TaskConstType TasksConst[TASKS_COUNT] = {
-   /* Task PeriodicTask */
+   /* Task SensorTask */
    {
-       OSEK_TASK_PeriodicTask,   /* task entry point */
-       &ContextTaskPeriodicTask, /* pointer to task context */
-       StackTaskPeriodicTask, /* pointer stack memory */
-       sizeof(StackTaskPeriodicTask), /* stack size */
+       OSEK_TASK_SensorTask,   /* task entry point */
+       &ContextTaskSensorTask, /* pointer to task context */
+       StackTaskSensorTask, /* pointer stack memory */
+       sizeof(StackTaskSensorTask), /* stack size */
        0, /* task priority */
        1, /* task max activations */
        {
@@ -132,12 +132,12 @@ const TaskConstType TasksConst[TASKS_COUNT] = {
       0 ,/* resources mask */
       0 /* core */
    },
-   /* Task PeriodicTask2 */
+   /* Task ActionTask */
    {
-       OSEK_TASK_PeriodicTask2,   /* task entry point */
-       &ContextTaskPeriodicTask2, /* pointer to task context */
-       StackTaskPeriodicTask2, /* pointer stack memory */
-       sizeof(StackTaskPeriodicTask2), /* stack size */
+       OSEK_TASK_ActionTask,   /* task entry point */
+       &ContextTaskActionTask, /* pointer to task context */
+       StackTaskActionTask, /* pointer stack memory */
+       sizeof(StackTaskActionTask), /* stack size */
        0, /* task priority */
        1, /* task max activations */
        {
@@ -159,8 +159,8 @@ TaskVariableType TasksVar[TASKS_COUNT];
 
 /** \brief List of Auto Start Tasks in Application Mode AppMode1 */
 const TaskType TasksAppModeAppMode1[2]  = {
-   PeriodicTask,
-   PeriodicTask2
+   SensorTask,
+   ActionTask
 };
 /** \brief AutoStart Array */
 const AutoStartType AutoStart[1]  = {
@@ -196,7 +196,7 @@ const AlarmConstType AlarmsConst[2]  = {
       ACTIVATETASK, /* Alarm action */
       {
          NULL, /* no callback */
-         PeriodicTask, /* TaskID */
+         SensorTask, /* TaskID */
          0, /* no event */
          0 /* no counter */
       },
@@ -206,7 +206,7 @@ const AlarmConstType AlarmsConst[2]  = {
       ACTIVATETASK, /* Alarm action */
       {
          NULL, /* no callback */
-         PeriodicTask2, /* TaskID */
+         ActionTask, /* TaskID */
          0, /* no event */
          0 /* no counter */
       },
@@ -216,13 +216,13 @@ const AlarmConstType AlarmsConst[2]  = {
 const AutoStartAlarmType AutoStartAlarm[ALARM_AUTOSTART_COUNT] = {
   {
       AppMode1, /* Application Mode */
-      ActivatePeriodicTask, /* Alarms */
+      ActivateSensorTask, /* Alarms */
       0, /* Alarm Time */
       100 /* Alarm Time */
    },
   {
       AppMode1, /* Application Mode */
-      ActivatePeriodicTask2, /* Alarms */
+      ActivateActionTask, /* Alarms */
       0, /* Alarm Time */
       200 /* Alarm Time */
    }

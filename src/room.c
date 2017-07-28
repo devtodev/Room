@@ -10,6 +10,11 @@
 #include "os.h"       // <= freeOSEK
 
 
+/*
+ * TODO: hacer la implementacion del sensor de humedad I2C
+ *
+ */
+
 /*==================[definiciones y macros]==================================*/
 
 /*==================[definiciones de datos internos]=========================*/
@@ -70,23 +75,23 @@ void ErrorHook(void)
 #define sKEY2 8
 int state;
 
-TASK(PeriodicTask2)
+TASK(ActionTask)
 {
-	if (state & sMOVE)
-	   {
-		gpioToggle( LED1 );
-	   }
-	if (state & sWET)
-	   {
-		gpioToggle( LED2 );
-	   }
 	if (state & sKEY1)
 	   {
-		gpioToggle( LED3 );
+		gpioToggle( LEDB );
 	   }
 	if (state & sKEY2)
 	   {
-		gpioToggle( LEDB );
+		gpioToggle( LED1 );
+	   }
+	if (state & sMOVE)
+	   {
+		gpioToggle( LED2 );
+	   }
+	if (state & sWET)
+	   {
+		gpioToggle( LED3 );
 	   }
 	state = 0;
 
@@ -94,28 +99,33 @@ TASK(PeriodicTask2)
 	TerminateTask();
 }
 
-TASK(PeriodicTask)
+TASK(SensorTask)
 {
+	int aKey1 = !gpioRead( TEC1 );
+	int aKey2 = !gpioRead( TEC2 );
+	int aMove = !gpioRead( TEC3 );
+	int aWet =  !gpioRead( TEC4 ) * 41;
+
 	// Movimiento
-	if (!gpioRead( TEC1 ))
+	if (aMove)
 	{
 		state = state | sMOVE;
 	}
 
 	// Humedad
-	if (!gpioRead( TEC2 ))
+	if (aWet > 40)
 	{
 		state = state | sWET;
 	}
 
 	// Tecla 1
-	if (!gpioRead( TEC3 ))
+	if (aKey1)
 	{
 		state = state | sKEY1;
 	}
 
 	// Tecla 2
-	if (!gpioRead( TEC4 ))
+	if (aKey2)
 	{
 		state = state | sKEY2;
 	}

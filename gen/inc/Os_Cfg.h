@@ -80,19 +80,19 @@
 #define OSEK_OS_INTERRUPT_MASK ((InterruptFlagsType)0xFFFFFFFFU)
 
 /** \brief Task Definition */
-#define PeriodicTask 0
+#define SensorTask 0
 /** \brief Task Definition */
-#define PeriodicTask2 1
+#define ActionTask 1
 
 /** \brief Definition of the Application Mode AppMode1 */
 #define AppMode1 0
 
 
 
-/** \brief Definition of the Alarm ActivatePeriodicTask */
-#define ActivatePeriodicTask 0
-/** \brief Definition of the Alarm ActivatePeriodicTask2 */
-#define ActivatePeriodicTask2 1
+/** \brief Definition of the Alarm ActivateSensorTask */
+#define ActivateSensorTask 0
+/** \brief Definition of the Alarm ActivateActionTask */
+#define ActivateActionTask 1
 
 /** \brief Definition of the Counter HardwareCounter */
 #define HardwareCounter 0
@@ -181,10 +181,10 @@ extern unsigned int Osek_ErrorRet;
 /** \brief Error Hook */
 extern void ErrorHook(void);
 
-/** \brief Task Declaration of Task PeriodicTask */
-DeclareTask(PeriodicTask);
-/** \brief Task Declaration of Task PeriodicTask2 */
-DeclareTask(PeriodicTask2);
+/** \brief Task Declaration of Task SensorTask */
+DeclareTask(SensorTask);
+/** \brief Task Declaration of Task ActionTask */
+DeclareTask(ActionTask);
 
 
 

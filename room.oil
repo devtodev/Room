@@ -13,7 +13,7 @@ OSEK OSEK {
 
    APPMODE = AppMode1;
 
-   TASK PeriodicTask {
+   TASK SensorTask {
       PRIORITY = 2;
       ACTIVATION = 1;
       STACK = 512;
@@ -24,7 +24,7 @@ OSEK OSEK {
       }
    }
 
-   TASK PeriodicTask2 {
+   TASK ActionTask {
       PRIORITY = 2;
       ACTIVATION = 1;
       STACK = 512;
@@ -35,10 +35,10 @@ OSEK OSEK {
       }
    }
    
-   ALARM ActivatePeriodicTask {
+   ALARM ActivateSensorTask {
       COUNTER = HardwareCounter;
       ACTION = ACTIVATETASK {
-         TASK = PeriodicTask;
+         TASK = SensorTask;
       }
       AUTOSTART = TRUE {
       	APPMODE = AppMode1;
@@ -47,10 +47,10 @@ OSEK OSEK {
       }
    }
 
-   ALARM ActivatePeriodicTask2 {
+   ALARM ActivateActionTask {
       COUNTER = HardwareCounter;
       ACTION = ACTIVATETASK {
-         TASK = PeriodicTask2;
+         TASK = ActionTask;
       }
       AUTOSTART = TRUE {
       	APPMODE = AppMode1;

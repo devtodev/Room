@@ -72,6 +72,16 @@
 /*==================[internal functions declaration]=========================*/
 
 /*==================[internal data definition]===============================*/
+unsigned int Osek_ErrorApi;
+
+unsigned int Osek_ErrorParam1;
+
+unsigned int Osek_ErrorParam2;
+
+unsigned int Osek_ErrorParam3;
+
+unsigned int Osek_ErrorRet;
+
 
 /*==================[external data definition]===============================*/
 
