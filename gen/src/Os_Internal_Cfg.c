@@ -254,7 +254,7 @@ const AutoStartAlarmType AutoStartAlarm[ALARM_AUTOSTART_COUNT] = {
       AppMode1, /* Application Mode */
       ActivateSensorTask, /* Alarms */
       0, /* Alarm Time */
-      100 /* Alarm Time */
+      5 /* Alarm Time */
    },
   {
       AppMode1, /* Application Mode */
@@ -266,7 +266,7 @@ const AutoStartAlarmType AutoStartAlarm[ALARM_AUTOSTART_COUNT] = {
       AppMode1, /* Application Mode */
       ActivateActionTask, /* Alarms */
       0, /* Alarm Time */
-      200 /* Alarm Time */
+      100 /* Alarm Time */
    }
 };
 

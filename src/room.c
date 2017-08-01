@@ -8,7 +8,8 @@
 
 #include "sapi.h"     // <= Biblioteca sAPI
 #include "os.h"       // <= freeOSEK
-#define sMOTION GPIO0
+#include "sensors.h"
+#include "actions.h"
 
 /*
  * TODO: hacer la implementacion del sensor de humedad I2C
@@ -34,8 +35,7 @@ int main( void )
    // Inicializar y configurar la plataforma
    boardConfig();   
    
-   // Init motion sensor
-   gpioConfig( sMOTION, GPIO_INPUT );
+   initSensors();
 
    // ---------- INICIAR SISTEMA OPERATIVO --------------------
 	// Starts the operating system in the Application Mode 1
@@ -72,12 +72,6 @@ void ErrorHook(void)
  *
  */
 
-#define sMOVE 1
-#define sWET  2
-#define sKEY1 3
-#define sKEY2 4
-int state;
-
 TASK(HumanMachineTask)
 {
 	TerminateTask();
@@ -86,24 +80,12 @@ TASK(HumanMachineTask)
 
 TASK(ActionTask)
 {
-	gpioWrite(LEDB, state & (1 << sKEY1));
-	gpioWrite(LED1, state & (1 << sKEY2));
-	gpioWrite(LED2, state & (1 << sMOVE));
-	gpioWrite(LED3, state & (1 << sWET));
-	// terminate task
-	TerminateTask();
+	actionsTask();
 }
 
 TASK(SensorTask)
 {
-	state = 0;
-	state = state | (!gpioRead( TEC1 ) << sKEY1);
-	state = state | (!gpioRead( TEC2 ) << sKEY2);
-	state = state | (gpioRead( sMOTION ) << sMOVE);
-	state = state | (!gpioRead( TEC4 ) << sWET);
-
-	// terminate task
-	TerminateTask();
+	sensorsTask();
 }
 
 /*==================[definiciones de funciones internas]=====================*/

@@ -52,7 +52,7 @@ OSEK OSEK {
       AUTOSTART = TRUE {
       	APPMODE = AppMode1;
       	ALARMTIME = 0;
-      	CYCLETIME = 100;
+      	CYCLETIME = 5;
       }
    }
 
@@ -76,7 +76,7 @@ OSEK OSEK {
       AUTOSTART = TRUE {
       	APPMODE = AppMode1;
       	ALARMTIME = 0;
-      	CYCLETIME = 200;
+      	CYCLETIME = 100;
       }
    }
 
