@@ -74,8 +74,8 @@ void ErrorHook(void)
 
 #define sMOVE 1
 #define sWET  2
-#define sKEY1 4
-#define sKEY2 8
+#define sKEY1 3
+#define sKEY2 4
 int state;
 
 TASK(HumanMachineTask)
@@ -86,58 +86,21 @@ TASK(HumanMachineTask)
 
 TASK(ActionTask)
 {
-	if (state & sKEY1)
-	   {
-		gpioToggle( LEDB );
-	   }
-	if (state & sKEY2)
-	   {
-		gpioToggle( LED1 );
-	   }
-	if (state & sMOVE)
-	   {
-		gpioToggle( LED2 );
-	   }
-	if (state & sWET)
-	   {
-		gpioToggle( LED3 );
-	   }
-	state = 0;
-
+	gpioWrite(LEDB, state & (1 << sKEY1));
+	gpioWrite(LED1, state & (1 << sKEY2));
+	gpioWrite(LED2, state & (1 << sMOVE));
+	gpioWrite(LED3, state & (1 << sWET));
 	// terminate task
 	TerminateTask();
 }
 
 TASK(SensorTask)
 {
-	int aKey1 = !gpioRead( TEC1 );
-	int aKey2 = !gpioRead( TEC2 );
-	int aMove = !gpioRead( sMOTION );
-	int aWet =  !gpioRead( TEC4 ) * 41;
-
-	// Movimiento
-	if (aMove)
-	{
-		state = state | sMOVE;
-	}
-
-	// Humedad
-	if (aWet > 40)
-	{
-		state = state | sWET;
-	}
-
-	// Tecla 1
-	if (aKey1)
-	{
-		state = state | sKEY1;
-	}
-
-	// Tecla 2
-	if (aKey2)
-	{
-		state = state | sKEY2;
-	}
+	state = 0;
+	state = state | (!gpioRead( TEC1 ) << sKEY1);
+	state = state | (!gpioRead( TEC2 ) << sKEY2);
+	state = state | (gpioRead( sMOTION ) << sMOVE);
+	state = state | (!gpioRead( TEC4 ) << sWET);
 
 	// terminate task
 	TerminateTask();
