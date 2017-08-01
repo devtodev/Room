@@ -82,7 +82,9 @@
 /** \brief Task Definition */
 #define SensorTask 0
 /** \brief Task Definition */
-#define ActionTask 1
+#define HumanMachineTask 1
+/** \brief Task Definition */
+#define ActionTask 2
 
 /** \brief Definition of the Application Mode AppMode1 */
 #define AppMode1 0
@@ -91,8 +93,10 @@
 
 /** \brief Definition of the Alarm ActivateSensorTask */
 #define ActivateSensorTask 0
+/** \brief Definition of the Alarm ActivateHumanMachineTask */
+#define ActivateHumanMachineTask 1
 /** \brief Definition of the Alarm ActivateActionTask */
-#define ActivateActionTask 1
+#define ActivateActionTask 2
 
 /** \brief Definition of the Counter HardwareCounter */
 #define HardwareCounter 0
@@ -183,6 +187,8 @@ extern void ErrorHook(void);
 
 /** \brief Task Declaration of Task SensorTask */
 DeclareTask(SensorTask);
+/** \brief Task Declaration of Task HumanMachineTask */
+DeclareTask(HumanMachineTask);
 /** \brief Task Declaration of Task ActionTask */
 DeclareTask(ActionTask);
 

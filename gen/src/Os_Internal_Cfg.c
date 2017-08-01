@@ -83,6 +83,12 @@ uint8 StackTaskSensorTask[512 + TASK_STACK_ADDITIONAL_SIZE];
 #else
 uint8 StackTaskSensorTask[512];
 #endif
+/** \brief HumanMachineTask stack */
+#if ( x86 == ARCH )
+uint8 StackTaskHumanMachineTask[512 + TASK_STACK_ADDITIONAL_SIZE];
+#else
+uint8 StackTaskHumanMachineTask[512];
+#endif
 /** \brief ActionTask stack */
 #if ( x86 == ARCH )
 uint8 StackTaskActionTask[512 + TASK_STACK_ADDITIONAL_SIZE];
@@ -92,14 +98,17 @@ uint8 StackTaskActionTask[512];
 
 /** \brief SensorTask context */
 TaskContextType ContextTaskSensorTask;
+/** \brief HumanMachineTask context */
+TaskContextType ContextTaskHumanMachineTask;
 /** \brief ActionTask context */
 TaskContextType ContextTaskActionTask;
 
 /** \brief Ready List for Priority 0 */
-TaskType ReadyList0[2];
+TaskType ReadyList0[3];
 
-const AlarmType OSEK_ALARMLIST_HardwareCounter[2] = {
+const AlarmType OSEK_ALARMLIST_HardwareCounter[3] = {
    ActivateSensorTask, /* this alarm has to be incremented with this counter */
+   ActivateHumanMachineTask, /* this alarm has to be incremented with this counter */
    ActivateActionTask, /* this alarm has to be incremented with this counter */
 };
 
@@ -121,6 +130,23 @@ const TaskConstType TasksConst[TASKS_COUNT] = {
        &ContextTaskSensorTask, /* pointer to task context */
        StackTaskSensorTask, /* pointer stack memory */
        sizeof(StackTaskSensorTask), /* stack size */
+       0, /* task priority */
+       1, /* task max activations */
+       {
+         1, /* extended task */
+         0, /* non preemtive task */
+         0
+      }, /* task const flags */
+      0 , /* events mask */
+      0 ,/* resources mask */
+      0 /* core */
+   },
+   /* Task HumanMachineTask */
+   {
+       OSEK_TASK_HumanMachineTask,   /* task entry point */
+       &ContextTaskHumanMachineTask, /* pointer to task context */
+       StackTaskHumanMachineTask, /* pointer stack memory */
+       sizeof(StackTaskHumanMachineTask), /* stack size */
        0, /* task priority */
        1, /* task max activations */
        {
@@ -173,7 +199,7 @@ const AutoStartType AutoStart[1]  = {
 
 const ReadyConstType ReadyConst[1] = { 
    {
-      2, /* Length of this ready list */
+      3, /* Length of this ready list */
       ReadyList0 /* Pointer to the Ready List */
    }
 };
@@ -187,16 +213,26 @@ const TaskPriorityType ResourcesPriority[0]  = {
 
 };
 /** TODO replace next line with: 
- ** AlarmVarType AlarmsVar[2]; */
-AlarmVarType AlarmsVar[2];
+ ** AlarmVarType AlarmsVar[3]; */
+AlarmVarType AlarmsVar[3];
 
-const AlarmConstType AlarmsConst[2]  = {
+const AlarmConstType AlarmsConst[3]  = {
    {
       OSEK_COUNTER_HardwareCounter, /* Counter */
       ACTIVATETASK, /* Alarm action */
       {
          NULL, /* no callback */
          SensorTask, /* TaskID */
+         0, /* no event */
+         0 /* no counter */
+      },
+   },
+   {
+      OSEK_COUNTER_HardwareCounter, /* Counter */
+      ACTIVATETASK, /* Alarm action */
+      {
+         NULL, /* no callback */
+         HumanMachineTask, /* TaskID */
          0, /* no event */
          0 /* no counter */
       },
@@ -222,6 +258,12 @@ const AutoStartAlarmType AutoStartAlarm[ALARM_AUTOSTART_COUNT] = {
    },
   {
       AppMode1, /* Application Mode */
+      ActivateHumanMachineTask, /* Alarms */
+      0, /* Alarm Time */
+      5 /* Alarm Time */
+   },
+  {
+      AppMode1, /* Application Mode */
       ActivateActionTask, /* Alarms */
       0, /* Alarm Time */
       200 /* Alarm Time */
@@ -232,7 +274,7 @@ CounterVarType CountersVar[1];
 
 const CounterConstType CountersConst[1] = {
    {
-      2, /* quantity of alarms for this counter */
+      3, /* quantity of alarms for this counter */
       (AlarmType*)OSEK_ALARMLIST_HardwareCounter, /* alarms list */
       1000, /* max allowed value */
       1, /* min cycle */

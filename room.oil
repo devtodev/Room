@@ -24,6 +24,15 @@ OSEK OSEK {
       }
    }
 
+   TASK HumanMachineTask {
+      PRIORITY = 2;
+      ACTIVATION = 1;
+      STACK = 512;
+      TYPE = EXTENDED;
+      SCHEDULE = NON;
+   }
+
+
    TASK ActionTask {
       PRIORITY = 2;
       ACTIVATION = 1;
@@ -44,6 +53,18 @@ OSEK OSEK {
       	APPMODE = AppMode1;
       	ALARMTIME = 0;
       	CYCLETIME = 100;
+      }
+   }
+
+   ALARM ActivateHumanMachineTask {
+      COUNTER = HardwareCounter;
+      ACTION = ACTIVATETASK {
+         TASK = HumanMachineTask;
+      }
+      AUTOSTART = TRUE {
+      	APPMODE = AppMode1;
+      	ALARMTIME = 0;
+      	CYCLETIME = 5;
       }
    }
 
