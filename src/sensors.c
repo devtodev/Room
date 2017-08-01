@@ -23,14 +23,15 @@ void sensorsTask(void)
 
 	movAntiBounce = (gpioRead( sMOTION ))? movAntiBounce + 1 : 0;
 
-	state = state | (!gpioRead( TEC1 ) << sKEY1);
-	state = state | (!gpioRead( TEC2 ) << sKEY2);
+	if (!gpioRead( TEC1 )) state = state | sKEY1;
+	if (!gpioRead( TEC2 )) state = state | sKEY2;
 
 	if (movAntiBounce > 10 ) {
 		movAntiBounce--; // avoid the overflow
 		state = state | sMOVE;
 	}
-	state = state | (!gpioRead( TEC4 ) << sWET);
+
+	if (!gpioRead( TEC4 )) state = state | sWET;
 
 	// terminate task
 	TerminateTask();
