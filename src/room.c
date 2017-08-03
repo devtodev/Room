@@ -10,6 +10,7 @@
 #include "os.h"       // <= freeOSEK
 #include "sensors.h"
 #include "actions.h"
+#include "HTU21DF.h"
 
 /*
  * TODO: hacer la implementacion del sensor de humedad I2C
@@ -28,16 +29,15 @@
 
 /*==================[funcion principal]======================================*/
 
-// FUNCION PRINCIPAL, PUNTO DE ENTRADA AL PROGRAMA LUEGO DE ENCENDIDO O RESET.
 int main( void )
 {
-   // ---------- CONFIGURACIONES ------------------------------
-   // Inicializar y configurar la plataforma
+   // Read clock settings and update SystemCoreClock variable
+   SystemCoreClockUpdate();
+
    boardConfig();   
    
    initSensors();
 
-   // ---------- INICIAR SISTEMA OPERATIVO --------------------
 	// Starts the operating system in the Application Mode 1
 	// This example has only one Application Mode
 	StartOS(AppMode1);
@@ -49,10 +49,7 @@ int main( void )
 	// StartOs shall never returns, but to avoid compiler warnings or errors
 	// 0 is returned
 
-   // NO DEBE LLEGAR NUNCA AQUI, debido a que a este programa se ejecuta 
-   // directamenteno sobre un microcontroladore y no es llamado por ningun
-   // Sistema Operativo, como en el caso de un programa para PC.
-   return 0;
+	return 0;
 }
 
 
