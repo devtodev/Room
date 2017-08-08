@@ -82,7 +82,7 @@
 /** \brief Task Definition */
 #define SensorTask 0
 /** \brief Task Definition */
-#define HumanMachineTask 1
+#define M2MTask 1
 /** \brief Task Definition */
 #define ActionTask 2
 
@@ -93,8 +93,8 @@
 
 /** \brief Definition of the Alarm ActivateSensorTask */
 #define ActivateSensorTask 0
-/** \brief Definition of the Alarm ActivateHumanMachineTask */
-#define ActivateHumanMachineTask 1
+/** \brief Definition of the Alarm ActivateM2MTask */
+#define ActivateM2MTask 1
 /** \brief Definition of the Alarm ActivateActionTask */
 #define ActivateActionTask 2
 
@@ -187,8 +187,8 @@ extern void ErrorHook(void);
 
 /** \brief Task Declaration of Task SensorTask */
 DeclareTask(SensorTask);
-/** \brief Task Declaration of Task HumanMachineTask */
-DeclareTask(HumanMachineTask);
+/** \brief Task Declaration of Task M2MTask */
+DeclareTask(M2MTask);
 /** \brief Task Declaration of Task ActionTask */
 DeclareTask(ActionTask);
 

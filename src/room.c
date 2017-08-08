@@ -11,7 +11,7 @@
 #include "sensors.h"
 #include "actions.h"
 #include "HTU21DF.h"
-
+#include "m2m.h"
 /*
  * TODO: hacer la implementacion del sensor de humedad I2C
  *
@@ -37,7 +37,7 @@ int main( void )
    boardConfig();   
    
    initSensors();
-
+   initM2M();
 	// Starts the operating system in the Application Mode 1
 	// This example has only one Application Mode
 	StartOS(AppMode1);
@@ -69,9 +69,9 @@ void ErrorHook(void)
  *
  */
 
-TASK(HumanMachineTask)
+TASK(M2MTask)
 {
-	TerminateTask();
+	m2mTask();
 }
 
 

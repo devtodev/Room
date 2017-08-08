@@ -83,11 +83,11 @@ uint8 StackTaskSensorTask[512 + TASK_STACK_ADDITIONAL_SIZE];
 #else
 uint8 StackTaskSensorTask[512];
 #endif
-/** \brief HumanMachineTask stack */
+/** \brief M2MTask stack */
 #if ( x86 == ARCH )
-uint8 StackTaskHumanMachineTask[512 + TASK_STACK_ADDITIONAL_SIZE];
+uint8 StackTaskM2MTask[512 + TASK_STACK_ADDITIONAL_SIZE];
 #else
-uint8 StackTaskHumanMachineTask[512];
+uint8 StackTaskM2MTask[512];
 #endif
 /** \brief ActionTask stack */
 #if ( x86 == ARCH )
@@ -98,8 +98,8 @@ uint8 StackTaskActionTask[512];
 
 /** \brief SensorTask context */
 TaskContextType ContextTaskSensorTask;
-/** \brief HumanMachineTask context */
-TaskContextType ContextTaskHumanMachineTask;
+/** \brief M2MTask context */
+TaskContextType ContextTaskM2MTask;
 /** \brief ActionTask context */
 TaskContextType ContextTaskActionTask;
 
@@ -108,7 +108,7 @@ TaskType ReadyList0[3];
 
 const AlarmType OSEK_ALARMLIST_HardwareCounter[3] = {
    ActivateSensorTask, /* this alarm has to be incremented with this counter */
-   ActivateHumanMachineTask, /* this alarm has to be incremented with this counter */
+   ActivateM2MTask, /* this alarm has to be incremented with this counter */
    ActivateActionTask, /* this alarm has to be incremented with this counter */
 };
 
@@ -141,12 +141,12 @@ const TaskConstType TasksConst[TASKS_COUNT] = {
       0 ,/* resources mask */
       0 /* core */
    },
-   /* Task HumanMachineTask */
+   /* Task M2MTask */
    {
-       OSEK_TASK_HumanMachineTask,   /* task entry point */
-       &ContextTaskHumanMachineTask, /* pointer to task context */
-       StackTaskHumanMachineTask, /* pointer stack memory */
-       sizeof(StackTaskHumanMachineTask), /* stack size */
+       OSEK_TASK_M2MTask,   /* task entry point */
+       &ContextTaskM2MTask, /* pointer to task context */
+       StackTaskM2MTask, /* pointer stack memory */
+       sizeof(StackTaskM2MTask), /* stack size */
        0, /* task priority */
        1, /* task max activations */
        {
@@ -184,15 +184,16 @@ const TaskCoreType RemoteTasksCore[REMOTE_TASKS_COUNT] = {};
 TaskVariableType TasksVar[TASKS_COUNT];
 
 /** \brief List of Auto Start Tasks in Application Mode AppMode1 */
-const TaskType TasksAppModeAppMode1[2]  = {
+const TaskType TasksAppModeAppMode1[3]  = {
    SensorTask,
+   M2MTask,
    ActionTask
 };
 /** \brief AutoStart Array */
 const AutoStartType AutoStart[1]  = {
    /* Application Mode AppMode1 */
    {
-      2, /* Total Auto Start Tasks in this Application Mode */
+      3, /* Total Auto Start Tasks in this Application Mode */
       (TaskRefType)TasksAppModeAppMode1 /* Pointer to the list of Auto Start Stacks on this Application Mode */
    }
 };
@@ -232,7 +233,7 @@ const AlarmConstType AlarmsConst[3]  = {
       ACTIVATETASK, /* Alarm action */
       {
          NULL, /* no callback */
-         HumanMachineTask, /* TaskID */
+         M2MTask, /* TaskID */
          0, /* no event */
          0 /* no counter */
       },
@@ -254,19 +255,19 @@ const AutoStartAlarmType AutoStartAlarm[ALARM_AUTOSTART_COUNT] = {
       AppMode1, /* Application Mode */
       ActivateSensorTask, /* Alarms */
       0, /* Alarm Time */
-      5 /* Alarm Time */
+      31 /* Alarm Time */
    },
   {
       AppMode1, /* Application Mode */
-      ActivateHumanMachineTask, /* Alarms */
+      ActivateM2MTask, /* Alarms */
       0, /* Alarm Time */
-      5 /* Alarm Time */
+      19 /* Alarm Time */
    },
   {
       AppMode1, /* Application Mode */
       ActivateActionTask, /* Alarms */
       0, /* Alarm Time */
-      100 /* Alarm Time */
+      101 /* Alarm Time */
    }
 };
 

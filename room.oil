@@ -1,6 +1,6 @@
 OSEK OSEK {
 
-   OS	ExampleOS {
+   OS ExampleOS {
       STATUS = EXTENDED;
       ERRORHOOK = TRUE;
       PRETASKHOOK = FALSE;
@@ -24,12 +24,15 @@ OSEK OSEK {
       }
    }
 
-   TASK HumanMachineTask {
+   TASK M2MTask {
       PRIORITY = 2;
       ACTIVATION = 1;
       STACK = 512;
       TYPE = EXTENDED;
       SCHEDULE = NON;
+	  AUTOSTART = TRUE {
+      	APPMODE = AppMode1;
+      }
    }
 
 
@@ -52,19 +55,19 @@ OSEK OSEK {
       AUTOSTART = TRUE {
       	APPMODE = AppMode1;
       	ALARMTIME = 0;
-      	CYCLETIME = 5;
+      	CYCLETIME = 31;
       }
    }
 
-   ALARM ActivateHumanMachineTask {
+   ALARM ActivateM2MTask {
       COUNTER = HardwareCounter;
       ACTION = ACTIVATETASK {
-         TASK = HumanMachineTask;
+         TASK = M2MTask;
       }
       AUTOSTART = TRUE {
       	APPMODE = AppMode1;
       	ALARMTIME = 0;
-      	CYCLETIME = 5;
+      	CYCLETIME = 19;
       }
    }
 
@@ -76,7 +79,7 @@ OSEK OSEK {
       AUTOSTART = TRUE {
       	APPMODE = AppMode1;
       	ALARMTIME = 0;
-      	CYCLETIME = 100;
+      	CYCLETIME = 101;
       }
    }
 
