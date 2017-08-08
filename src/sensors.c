@@ -9,6 +9,7 @@
 #include "sapi.h"
 #include "os.h"       // <= freeOSEK
 #include "HTU21DF.h"
+#include "m2m.h"
 
 #define sMOTION GPIO0
 
@@ -19,6 +20,7 @@ int k2AntiBounce;
 
 void sensorsTask(void)
 {
+	char msgM2M[5];
 	state = 0;
 /*	int temperature = HTU21DF_readTemperature();
 	float wet = HTU21DF_readHumidity();
@@ -33,6 +35,14 @@ void sensorsTask(void)
 	if (!gpioRead( TEC1 )) state = state | sKEY1;
 	if (!gpioRead( TEC2 )) state = state | sKEY2;
 	if (!gpioRead( TEC4 )) state = state | sWET;
+
+	msgM2M[0] = 'S';
+	msgM2M[1] = (state | sMOVE)?'1':'0';
+	msgM2M[2] = !gpioRead( TEC1 )?'1':'0';
+	msgM2M[3] = !gpioRead( TEC2 )?'1':'0';
+	msgM2M[4] = !gpioRead( TEC4 )?'1':'0';
+
+	addMessage(msgM2M);
 
 	TerminateTask();
 }

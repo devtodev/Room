@@ -8,40 +8,62 @@
 #include "m2m.h"
 #include "sapi.h"
 
+#define PREFIX_SENSORS    'S'
+#define PREFIX_M2M_STATES 'M'
+#define PREFIX_ACTIONS    'A'
+#define MAXBUFFERM2M 	   5
+
+char replySensors[MAXBUFFERM2M], replyStates[MAXBUFFERM2M], replyActions[MAXBUFFERM2M];
+
 uartMap_t MyUART = UART_USB;
 int UART_SPEED = 115200;
 
-#define MAXBUFFERM2M 5
-
-char bufferM2M[MAXBUFFERM2M][MAXBUFFERM2M];
-int iBufferM2M = 0, cursorBufferM2M = 0;
 char overflowBuffer = 0;
 
 int addMessage(char msg[5])
 {
-	if (iBufferM2M < MAXBUFFERM2M)
+	switch (msg[0])
 	{
-		strcpy(bufferM2M[iBufferM2M], msg);
-		iBufferM2M++;
-		if (iBufferM2M >= MAXBUFFERM2M)
-		{
-			overflowBuffer = 1;
-			iBufferM2M = 0;
-		}
+		case PREFIX_SENSORS:
+			strcpy(replySensors, msg);
+		break;
+		case PREFIX_M2M_STATES:
+			strcpy(replyStates, msg);
+		break;
+		case PREFIX_ACTIONS:
+			strcpy(replyActions, msg);
+		break;
 	}
 }
 
+#define MAXINBUFF 50
+
 void m2mTask(void)
 {
-	if ((iBufferM2M > 0) || (overflowBuffer == 1))
+	char inBuff[MAXINBUFF];
+	char in, i = 0;
+
+	// read
+	while ((uartReadByte(MyUART, &in)) && (i < MAXINBUFF))
 	{
-		uartWriteString(MyUART, bufferM2M[cursorBufferM2M]);
-
-		cursorBufferM2M++;
-
-		if ( ((iBufferM2M <= cursorBufferM2M) && (overflowBuffer == 0)) ||
-			(MAXBUFFERM2M <= cursorBufferM2M))
-			cursorBufferM2M = 0;
+		inBuff[i] = in;
+		i++;
+	}
+	// response
+	if (i > 0)
+	{
+		switch (inBuff[0])
+		{
+			case PREFIX_SENSORS:
+				uartWriteString(MyUART, replySensors);
+				break;
+			case PREFIX_M2M_STATES:
+				uartWriteString(MyUART, replyStates);
+				break;
+			case PREFIX_ACTIONS:
+				uartWriteString(MyUART, replyActions);
+				break;
+		}
 	}
 
 	TerminateTask();

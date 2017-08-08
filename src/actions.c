@@ -25,7 +25,7 @@ void actionsTask(void)
 	gpioWrite(LED2, (moveDelay > 0));
 	gpioWrite(LED3, state & sWET);
 
-	msgM2M[0] = 'k';
+	msgM2M[0] = 'M';
 	msgM2M[1] = (state & sKEY1)?'1':'0';
 	msgM2M[2] = (state & sKEY2)?'1':'0';
 	msgM2M[3] = (moveDelay > 0)?'1':'0';
