@@ -17,6 +17,9 @@
 void sensorsTask(void);
 void initSensors(void);
 
-int state;
+// sensors info
+int temperature;
+float humidity;
+char move, key1, key2;
 
 #endif /* APPLICATION_ROOM_SRC_SENSORS_H_ */

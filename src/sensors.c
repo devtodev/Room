@@ -14,35 +14,24 @@
 #define sMOTION GPIO0
 
 int movAntiBounce;
-int wetAntiBounce;
-int k1AntiBounce;
-int k2AntiBounce;
 
 void sensorsTask(void)
 {
-	char msgM2M[5];
-	state = 0;
-/*	int temperature = HTU21DF_readTemperature();
-	float wet = HTU21DF_readHumidity();
-	if (wet > 96) state = state | sWET;
-*/
+	temperature = 19; //HTU21DF_readTemperature();
+	addMessage(PREFIX_TEMPERATURE, temperature);
+	humidity = 93; //HTU21DF_readHumidity();
+	addMessage(PREFIX_HUMIDITY, (int) humidity);
 	movAntiBounce = (gpioRead( sMOTION ))? movAntiBounce + 1 : 0;
 	if (movAntiBounce > 10 ) {
 		movAntiBounce--; // avoid overflow
-		state = state | sMOVE;
-	}
+		move = 1;
+	} else move = 0;
+	addMessage(PREFIX_MOVE, move);
 
-	if (!gpioRead( TEC1 )) state = state | sKEY1;
-	if (!gpioRead( TEC2 )) state = state | sKEY2;
-	if (!gpioRead( TEC4 )) state = state | sWET;
-
-	msgM2M[0] = 'S';
-	msgM2M[1] = (state | sMOVE)?'1':'0';
-	msgM2M[2] = !gpioRead( TEC1 )?'1':'0';
-	msgM2M[3] = !gpioRead( TEC2 )?'1':'0';
-	msgM2M[4] = !gpioRead( TEC4 )?'1':'0';
-
-	addMessage(msgM2M);
+	key1 = (!gpioRead( TEC1 ));
+	addMessage(PREFIX_KEY1, key1);
+	key2 = (!gpioRead( TEC2 ));
+	addMessage(PREFIX_KEY2, key2);
 
 	TerminateTask();
 }
@@ -55,9 +44,10 @@ void initSensors(void)
 	HTU21DF_initI2C();
 	HTU21DF_begin();
 	// init sensors state
-	state = 0;
+	key1 = 0;
+	key2 = 0;
+	move = 0;
+	temperature = 0;
+	humidity = 0;
 	movAntiBounce = 0;
-	wetAntiBounce = 0;
-	k1AntiBounce = 0;
-	k2AntiBounce = 0;
 }

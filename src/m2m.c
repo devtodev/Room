@@ -8,51 +8,65 @@
 #include "m2m.h"
 #include "sapi.h"
 
-#define PREFIX_TEMPERATURE    'T'
-#define PREFIX_HUMIDITY       'H'
-#define PREFIX_MOVE    		  'M'
-#define PREFIX_LIGHT1         'L'
-#define PREFIX_LIGHT2    	  'l'
-#define PREFIX_FAN    		  'F'
-
-#define PREFIX_GET		      '<'
-#define PREFIX_SET    		  '='
-
-#define MAXBUFFERM2M 	   5
-
-char replyTemperature[MAXBUFFERM2M],
- 	 replyHumidity[MAXBUFFERM2M],
- 	 replyMove[MAXBUFFERM2M];
-	 replyLight1[MAXBUFFERM2M],
-	 replyLight2[MAXBUFFERM2M],
-	 replyFan[MAXBUFFERM2M];
+char replyTemperature[MAXBUFFERM2M];
+char replyHumidity[MAXBUFFERM2M];
+char replyMove[MAXBUFFERM2M];
+char replyLight1[MAXBUFFERM2M];
+char replyLight2[MAXBUFFERM2M];
+char replyKey1[MAXBUFFERM2M];
+char replyKey2[MAXBUFFERM2M];
+char replyFan[MAXBUFFERM2M];
 
 uartMap_t MyUART = UART_USB;
 int UART_SPEED = 115200;
 
 char overflowBuffer = 0;
 
-int addMessage(char msg[5])
+int addMessage(char type, void *value)
 {
-	switch (msg[0])
+	char data[MAXBUFFERM2M];
+	itoa( (int *) value, data, 10);
+	switch (type)
 	{
 	case PREFIX_TEMPERATURE:
-		strcpy(replyTemperature, msg);
+		replyTemperature[0] = PREFIX_TEMPERATURE;
+		replyTemperature[1] = '=';
+		strcpy(&replyTemperature[2], data);
 		break;
 	case PREFIX_HUMIDITY:
-		strcpy(replyHumidity, msg);
+		replyHumidity[0] = PREFIX_HUMIDITY;
+		replyHumidity[1] = '=';
+		strcpy(&replyHumidity[2], data);
 		break;
 	case PREFIX_MOVE:
-		strcpy(replyMove, msg);
+		replyMove[0] = PREFIX_MOVE;
+		replyMove[1] = '=';
+		strcpy(&replyMove[2], data);
 		break;
 	case PREFIX_LIGHT1:
-		strcpy(replyLight1, msg);
+		replyLight1[0] = PREFIX_LIGHT1;
+		replyLight1[1] = '=';
+		strcpy(&replyLight1[2], data);
 		break;
 	case PREFIX_LIGHT2:
-		strcpy(replyLight2, msg);
+		replyLight2[0] = PREFIX_LIGHT2;
+		replyLight2[1] = '=';
+		strcpy(&replyLight2[2], data);
+		break;
+	case PREFIX_KEY1:
+		replyKey1[0] = PREFIX_KEY1;
+		replyKey1[1] = '=';
+		strcpy(&replyKey1[2], data);
+		break;
+	case PREFIX_KEY2:
+		replyKey2[0] = PREFIX_KEY2;
+		replyKey2[1] = '=';
+		strcpy(&replyKey2[2], data);
 		break;
 	case PREFIX_FAN:
-		strcpy(replyFan, msg);
+		replyFan[0] = PREFIX_FAN;
+		replyFan[1] = '=';
+		strcpy(&replyFan[2], data);
 		break;
 	}
 
@@ -113,6 +127,12 @@ void m2mTask(void)
 			}
 			uartWriteString(MyUART, replyFan);
 			break;
+		case PREFIX_KEY1:
+			uartWriteString(MyUART, replyKey1);
+			break;
+		case PREFIX_KEY2:
+			uartWriteString(MyUART, replyKey2);
+			break;
 		}
 
 	}
@@ -122,5 +142,13 @@ void m2mTask(void)
 
 void initM2M(void)
 {
+	addMessage(PREFIX_KEY1, 0);
+	addMessage(PREFIX_KEY2, 0);
+	addMessage(PREFIX_TEMPERATURE, 0);
+	addMessage(PREFIX_HUMIDITY, 0);
+	addMessage(PREFIX_MOVE, 0);
+	addMessage(PREFIX_LIGHT1, 0);
+	addMessage(PREFIX_LIGHT2, 0);
+	addMessage(PREFIX_FAN, 0);
 	uartConfig( MyUART, UART_SPEED );
 }
