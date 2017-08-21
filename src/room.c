@@ -37,6 +37,7 @@ int main( void )
    boardConfig();   
    
    initSensors();
+   initActions();
    initM2M();
 	// Starts the operating system in the Application Mode 1
 	// This example has only one Application Mode

@@ -11,24 +11,35 @@
 #include "actions.h"
 #include "m2m.h"
 
+#define swLight1 GPIO2
+#define swLight2 GPIO4
+#define swFan 	 GPIO6
+
 int moveDelay = 0;
-int moveWait = 200;
+int fanDelay = 0;
+int timeToWait = 10;
 
 void actionsTask(void)
 {
-	char msgM2M[5];
-	moveDelay = (move)?moveWait:moveDelay-1;
+	// the following lines allow to move event stay ON for a while
+	moveDelay = (move || key1)?timeToWait:moveDelay-1;
 	moveDelay = (moveDelay < 0)?0:moveDelay; // void overflow
 
-	gpioWrite(LEDB, key1);
-	gpioWrite(LED1, key2);
+	fanDelay = (key2)?timeToWait:fanDelay-1;
+	fanDelay = (fanDelay < 0)?0:fanDelay;
+
 	gpioWrite(LED2, moveDelay);
-	gpioWrite(LED3, humidity);
+	gpioWrite(swLight1, moveDelay);
+
+	gpioWrite(LED3, fanDelay);
+	gpioWrite(swFan, humidity || fanDelay);
 
 	TerminateTask();
 }
 
 void initActions(void)
 {
-
+	gpioConfig( swLight1, GPIO_OUTPUT );
+	gpioConfig( swLight2, GPIO_OUTPUT );
+	gpioConfig( swFan, GPIO_OUTPUT );
 }
